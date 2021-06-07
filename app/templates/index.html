@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+				<h3>Welcome</h3>
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="about-img">
+                    <img src="{{url_for('static', filename='images/index/home.jpg')}}" class="img-fluid w-100 rounded" alt="">
+                </div>
+            </div>
+            <div class="col-lg-6 pt-5 pt-lg-0">
+                <div class="about-content">
+                    <h3 class="font-weight-bold" align="center">简介</h3>
+                    <p>&emsp;&emsp;本系统为模拟股票数据库系统，只考虑基本的股票交易，不考虑真实股票的各种复杂情况。普通用户可以进行股票的买卖，账户的充值等交易；管理员可以添加股票，设定股价等。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

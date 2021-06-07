@@ -1,0 +1,89 @@
+{% extends "myinfo_base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+{% block myinfo_content %}
+<div class="col-md-10 offset-md-1 col-lg-9 offset-lg-0">
+	<div class="widget welcome-message">
+		<h2>修改信息</h2>
+	</div>
+	<!-- Edit Personal Info -->
+	<div class="row">
+		<div class="col-lg-6 col-md-6">
+			<div class="widget personal-info">
+				<h3 class="widget-header user">个人信息</h3>
+				
+				<form method="post" enctype="multipart/form-data">
+					<div class="form-group">
+						<label for="first-name">{{form_edit.user_name.label.text}}</label>
+						{{form_edit.user_name}}
+					</div>
+
+					<label for="input-file">{{form_edit.profile_photo.label.text}}</label>
+					<div class="form-group choose-file d-inline-flex">
+						<i class="fa fa-user text-center px-3"></i>
+						{{form_edit.profile_photo}}
+					</div>
+					<input class="btn btn-transparent" data-target="#form_edit_Modal" data-toggle="modal" id="submit" name="submit" value="保存更改">
+					<!-- 模态框（Modal） -->
+					<div class="modal fade" id="form_edit_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 class="modal-title" id="myModalLabel">修改信息</h4>
+								</div>
+								<div class="modal-body">确定要保存更改吗？</div>
+								<div class="modal-footer">
+									<input class="btn btn-transparent" data-dismiss="modal" value="取消" type='submit'>
+									{{form_edit.submit}}
+								</div>
+							</div><!-- /.modal-content -->
+						</div><!-- /.modal -->
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-6">
+			<!-- Change Password -->
+			<div class="widget change-password">
+				<h3 class="widget-header user">密码</h3>
+				<form method="post">
+					{{form_passwordreset.csrf_token}}
+					<div class="form-group">
+						<label for="current-password">{{form_passwordreset.password_old.label.text}}</label>
+						{{form_passwordreset.password_old}}
+					</div>
+
+					<div class="form-group">
+						<label for="new-password">{{form_passwordreset.password1.label.text}}</label>
+						{{form_passwordreset.password1}}
+					</div>
+
+					<div class="form-group">
+						<label for="confirm-password">{{form_passwordreset.password2.label.text}}</label>
+						{{form_passwordreset.password2}}
+					</div>
+					<input class="btn btn-transparent" data-target="#form_passwordreset_Modal" data-toggle="modal" id="submit" name="submit" value="修改密码">
+					<!-- 模态框（Modal） -->
+					<div class="modal fade" id="form_passwordreset_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 class="modal-title" id="myModalLabel">修改信息</h4>
+								</div>
+								<div class="modal-body">确定要修改密码吗？</div>
+								<div class="modal-footer">
+									<input class="btn btn-transparent" data-dismiss="modal" value="取消" type='submit'>
+									{{form_passwordreset.submit}}
+								</div>
+							</div><!-- /.modal-content -->
+						</div><!-- /.modal -->
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

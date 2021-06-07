@@ -1,0 +1,178 @@
+<!-- {% extends "bootstrap/base.html" %} -->
+{% block title %}
+模拟股票管理系统{% if title %} - {{ title }}{% endif %}
+{% endblock %}
+
+{%- block styles %}
+<!-- PLUGINS CSS STYLE -->
+<!-- <link href="plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet"> -->
+<!-- Bootstrap -->
+<link href="{{url_for('static', filename='plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+<link href="{{url_for('static', filename='plugins/bootstrap/css/bootstrap-slider.css')}}" rel="stylesheet">
+<!-- Font Awesome -->
+<link href="{{url_for('static', filename='plugins/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+<!-- Owl Carousel -->
+<link href="{{url_for('static', filename='plugins/slick-carousel/slick/slick.css')}}" rel="stylesheet">
+<link href="{{url_for('static', filename='plugins/slick-carousel/slick/slick-theme.css')}}" rel="stylesheet">
+<!-- Fancy Box -->
+<link href="{{url_for('static', filename='plugins/fancybox/jquery.fancybox.pack.css')}}" rel="stylesheet">
+<link href="{{url_for('static', filename='plugins/jquery-nice-select/css/nice-select.css')}}" rel="stylesheet">
+<!-- CUSTOM CSS -->
+<link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
+<!-- highlight style CSS (default)-->
+<link href="{{url_for('static', filename='plugins/highlight/style/default.min.css')}}" rel="stylesheet"><!-- CSS by wgd -->
+<style>
+	.center {
+		margin-right: auto;
+		margin-left: auto;
+	}
+</style>
+<style>
+	.error {
+		color: firebrick;
+	}
+</style>
+<style>
+	.tip {
+		color: orangered
+	}
+</style>
+{%- endblock styles %}
+
+{% block body_attribs %}
+class="body-wrapper"
+{% endblock body_attribs %}
+{% block body -%}
+{% block navbar %}
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<nav class="navbar navbar-expand-lg navbar-light navigation">
+					<a class="navbar-brand" href="{{url_for('account.index')}}">
+						模拟股票管理系统
+					</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse"
+						data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul class="navbar-nav main-nav ">
+							<li	class="nav-item {% if request.path == '/' or request.path == '/index' %} active {% endif %}">
+								<a class="nav-link" href="{{url_for('account.index')}}">主页</a>
+							</li>
+							<li
+								class="nav-item dropdown dropdown-slide {% if request.path.find('/stock') != -1 %} active {% endif %}">
+								<a class="nav-link dropdown-toggle" data-toggle="dropdown">
+									股票 <span><i class="fa fa-angle-down"></i></span>
+								</a>
+								<!-- Dropdown list -->
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="{{url_for('stock.stockCompanies')}}">全部股票</a>
+									{% if current_user.identification == 'Admin' %}
+									<a class="dropdown-item" href="{{url_for('stock.addStock')}}">添加股票</a>
+									<a class="dropdown-item" href="{{url_for('stock.changePrice')}}">更新股价</a>
+									{% endif %}
+								</div>
+							</li>
+							<li
+								class="nav-item dropdown dropdown-slide {% if request.path.find('/transaction') != -1 %} active {% endif %}">
+								<a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+									aria-expanded="false">
+									交易 <span><i class="fa fa-angle-down"></i></span>
+								</a>
+								<!-- Dropdown list -->
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="{{url_for('transaction.allTransactions')}}">全部交易</a>
+									{% if current_user.identification == 'User' %}
+									<a class="dropdown-item" href="{{url_for('transaction.buy')}}">买入</a>
+									<a class="dropdown-item" href="{{url_for('transaction.sell')}}">卖出</a>
+									{% endif %}
+								</div>
+							</li>
+							{% if current_user.identification == 'User' %}
+							<li
+								class="nav-item dropdown dropdown-slide {% if request.path.find('/balance') != -1 %} active {% endif %}">
+								<a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+									aria-expanded="false">
+									资产 <span><i class="fa fa-angle-down"></i></span>
+								</a>
+								<!-- Dropdown list -->
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="{{ url_for('balance.allStockOwn') }}">股权拥有</a>
+									<a class="dropdown-item" href="{{ url_for('account.myinfo',info_action='checkdetail') }}">账户余额</a>
+									<a class="dropdown-item" href="{{ url_for('balance.charge') }}">账户充值</a>
+								</div>
+							</li>
+							{% endif %}
+						</ul>
+
+						<ul class="navbar-nav ml-auto mt-10">
+							{% if current_user.is_anonymous %}
+							<li class="nav-item">
+								<a class="nav-link login-button" href="{{url_for('account.login')}}">登录</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-white add-button" href="{{url_for('account.register')}}">注册</a>
+							</li>
+							{% else %}
+							<li class="nav-item {% if request.path.find('/myinfo') != -1 %} active {% endif %}">
+								<a class="nav-link login-button"
+									href="{{url_for('account.myinfo', info_action='checkdetail')}}">我的信息</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-white add-button" href="{{url_for('account.logout')}}">注销</a>
+								{% endif %}
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</div>
+	</div>
+</section>
+{%- endblock navbar %}
+
+{% block content %}
+<section>
+	<div class="container">
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		{% for message in messages %}
+		<div class="alert alert-info alert-dismissable" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+			</button>
+			{{ message }}
+		</div>
+		{% endfor %}
+		{% endif %}
+		{% endwith %}
+		{# application content needs to be provided in the app_content block #}
+	</div>
+</section>
+{% block app_content %}{% endblock %}
+{% endblock content %}
+
+{% block scripts %}
+{{ super() }}
+<!-- JAVASCRIPTS -->
+<script src="{{url_for('static', filename='plugins/jQuery/jquery.min.js')}}"></script>
+<script src="{{url_for('static', filename='plugins/bootstrap/js/popper.min.js')}}"></script>
+<script src="{{url_for('static', filename='plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='plugins/bootstrap/js/bootstrap-slider.js')}}"></script>
+<!-- tether js -->
+<script src="{{url_for('static', filename='plugins/tether/js/tether.min.js')}}"></script>
+<script src="{{url_for('static', filename='plugins/raty/jquery.raty-fa.js')}}"></script>
+<script src="{{url_for('static', filename='plugins/slick-carousel/slick/slick.min.js')}}"></script>
+<script src="{{url_for('static', filename='plugins/jquery-nice-select/js/jquery.nice-select.min.js')}}"></script>
+<script src="{{url_for('static', filename='plugins/fancybox/jquery.fancybox.pack.js')}}"></script>
+<script src="{{url_for('static', filename='plugins/smoothscroll/SmoothScroll.min.js')}}"></script>
+<script src="{{url_for('static', filename='plugins/highlight/highlight.min.js')}}"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<!-- google map -->
+<script src="{{url_for('static', filename='plugins/google-map/gmap.js')}}"></script>
+<script src="{{url_for('static', filename='js/script.js')}}"></script>
+<script src="{{url_for('static', filename='js/007.js')}}"></script>
+{%- endblock scripts %}
+
+{%- endblock body %}

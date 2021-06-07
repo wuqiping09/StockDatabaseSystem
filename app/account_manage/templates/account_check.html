@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+{% block app_content %}
+<div class="contianer">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 align-item-center">
+            <div class="widget welcome-message">
+                <h2>账号身份验证</h2>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="widget personal-info">
+                        <form action="{{url_for('account.account', action=current_action, page=next_page)}}" method="post">
+                            {{form.csrf_token()}}
+                            <div class="form-group">
+                                <label for="first-name">{{form.user_id.label.text}}</label>
+                                {{form.user_id}}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="first-name">{{form.email.label.text}}</label>
+                                {{form.email}}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="first-name">{{form.phone.label.text}}</label>
+                                {{form.phone}}
+                            </div>
+                            {{form.submit}}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
