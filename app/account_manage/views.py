@@ -216,7 +216,7 @@ def myinfo(info_action):
                 new_username=form_edit.user_name.data
                 no_input=r"''"                
                 if repr(new_username)!=no_input:     
-                    if current_user.Identification == 'User':
+                    if current_user.identification == 'User':
                         user = User.query.filter(User.user_id == current_user.user_id).first()
                         user.user_name=new_username
                         #user_identity = 1
@@ -238,8 +238,8 @@ def myinfo(info_action):
                     flash("用户名修改成功")
 
                 # 新头像非空则进行修改
-                if repr(request.files['profilephoto'].filename)!=no_input :
-                    new_profilephoto=request.files['profilephoto']
+                if repr(request.files['profile_photo'].filename)!=no_input:
+                    new_profilephoto=request.files['profile_photo']
                     valid_filetype=imghdr.what(new_profilephoto)
                     fname=new_profilephoto.filename                
                     ftype=fname.split('.')[1]     
